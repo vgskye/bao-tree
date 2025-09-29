@@ -18,6 +18,7 @@ pub struct EmptyOutboard {
     pub root: blake3::Hash,
 }
 
+#[cfg(feature = "sync")]
 impl crate::io::sync::Outboard for EmptyOutboard {
     fn root(&self) -> blake3::Hash {
         self.root
@@ -53,6 +54,7 @@ impl crate::io::fsm::Outboard for EmptyOutboard {
     }
 }
 
+#[cfg(feature = "sync")]
 impl crate::io::sync::OutboardMut for EmptyOutboard {
     fn save(&mut self, node: TreeNode, _pair: &(blake3::Hash, blake3::Hash)) -> io::Result<()> {
         if self.tree.is_relevant_for_outboard(node) {
@@ -180,6 +182,7 @@ impl PostOrderMemOutboard {
     /// This will hash the data and create an outboard.
     ///
     /// It is just a shortcut that calls [crate::io::sync::outboard_post_order].
+    #[cfg(feature = "sync")]
     pub fn create(data: impl AsRef<[u8]>, block_size: BlockSize) -> Self {
         let data = data.as_ref();
         let size = data.len() as u64;
@@ -216,6 +219,7 @@ impl<T> PostOrderMemOutboard<T> {
     }
 
     /// Flip the outboard to pre order.
+    #[cfg(feature = "sync")]
     pub fn flip(&self) -> PreOrderMemOutboard
     where
         T: AsRef<[u8]>,
@@ -230,6 +234,7 @@ impl<T> PostOrderMemOutboard<T> {
     }
 }
 
+#[cfg(feature = "sync")]
 impl<T: AsRef<[u8]>> crate::io::sync::Outboard for PostOrderMemOutboard<T> {
     fn root(&self) -> blake3::Hash {
         self.root
@@ -255,6 +260,7 @@ impl<T: AsRef<[u8]>> crate::io::fsm::Outboard for PostOrderMemOutboard<T> {
     }
 }
 
+#[cfg(feature = "sync")]
 impl<T: AsMut<[u8]>> crate::io::sync::OutboardMut for PostOrderMemOutboard<T> {
     fn save(&mut self, node: TreeNode, pair: &(blake3::Hash, blake3::Hash)) -> io::Result<()> {
         match self.tree.post_order_offset(node) {
@@ -350,6 +356,7 @@ impl PreOrderMemOutboard {
     /// Create a new outboard from `data` and a `block_size`.
     ///
     /// This will hash the data and create an outboard
+    #[cfg(feature = "sync")]
     pub fn create(data: impl AsRef<[u8]>, block_size: BlockSize) -> Self {
         let data = data.as_ref();
         let size = data.len() as u64;
@@ -383,6 +390,7 @@ impl<T> PreOrderMemOutboard<T> {
     }
 
     /// Flip the outboard to a post order outboard.
+    #[cfg(feature = "sync")]
     pub fn flip(&self) -> PostOrderMemOutboard
     where
         T: AsRef<[u8]>,
@@ -397,6 +405,7 @@ impl<T> PreOrderMemOutboard<T> {
     }
 }
 
+#[cfg(feature = "sync")]
 impl<T: AsRef<[u8]>> crate::io::sync::Outboard for PreOrderMemOutboard<T> {
     fn root(&self) -> blake3::Hash {
         self.root
@@ -409,6 +418,7 @@ impl<T: AsRef<[u8]>> crate::io::sync::Outboard for PreOrderMemOutboard<T> {
     }
 }
 
+#[cfg(feature = "sync")]
 impl<T: AsMut<[u8]>> crate::io::sync::OutboardMut for PreOrderMemOutboard<T> {
     fn save(&mut self, node: TreeNode, pair: &(blake3::Hash, blake3::Hash)) -> io::Result<()> {
         match self.tree.pre_order_offset(node) {

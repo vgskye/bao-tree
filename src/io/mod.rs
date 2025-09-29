@@ -13,6 +13,7 @@ pub mod fsm;
 #[cfg(feature = "experimental-mixed")]
 pub mod mixed;
 pub mod outboard;
+#[cfg(feature = "sync")]
 pub mod sync;
 
 /// A parent hash pair.
